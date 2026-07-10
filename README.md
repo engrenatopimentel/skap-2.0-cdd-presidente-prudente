@@ -27,7 +27,7 @@ Portal onde o colaborador entra com CPF ou Matrícula + senha para acompanhar su
 
 ## Login de teste
 
-A senha padrão de cada colaborador novo é o primeiro nome em minúsculo (sem acento) + `123`. Exemplo: "Marcio Jose..." → `marcio123`. O colaborador pode trocar a senha a qualquer momento em "Trocar minha senha" — a troca não é obrigatória.
+A senha de cada colaborador é o primeiro nome em minúsculo (sem acento) + `123`. Exemplo: "Marcio Jose..." → `marcio123`. Por decisão do RH, não há troca de senha pelo colaborador — a senha padrão é definitiva.
 
 ## Reimportar dados
 
