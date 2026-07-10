@@ -29,16 +29,28 @@ Portal onde o colaborador entra com CPF ou Matrícula + senha para acompanhar su
 
 A senha de cada colaborador é o primeiro nome em minúsculo (sem acento) + `123`. Exemplo: "Marcio Jose..." → `marcio123`. Por decisão do RH, não há troca de senha pelo colaborador — a senha padrão é definitiva.
 
-## Reimportar dados
+## Atualizar os dados do site em produção (Vercel + Turso)
 
-Sempre que o RH atualizar os exports do Power BI (mesmos nomes de arquivo, na mesma pasta), basta rodar `npm run import` de novo. A importação é segura de repetir: atualiza dados de perfil e notas, mas nunca mexe na senha de quem já tem conta.
+O site em produção lê os dados de um banco Turso (não do banco local). Sempre que o RH exportar planilhas novas do Power BI (mesmos nomes de arquivo, na mesma pasta acima desta), o processo é:
+
+1. Sobrescreva os arquivos `.xlsx` na pasta acima desta (`Cadastro de Colaboradores.xlsx`, `Conformidade por Colaborador.xlsx`, etc.) com os novos exports.
+2. Rode:
+   ```bash
+   npm run import:prod
+   ```
+   Isso lê os xlsx atualizados e escreve direto no banco Turso de produção (usa as credenciais salvas em `.env.turso`, que não vai para o git). Não precisa mexer na Vercel nem redeployar — o site já vai mostrar os dados novos na próxima vez que alguém acessar, porque ele consulta o banco em tempo real.
+3. Confira o relatório impresso no terminal (e salvo em `last-import-report.txt`): quantos colaboradores foram atualizados e se alguma linha não casou com um nome do Cadastro.
+
+A importação é segura de repetir: atualiza dados de perfil e notas, mas nunca mexe na senha de quem já tem conta.
+
+> Nota: `npm run import` (sem `:prod`) atualiza só o banco local (`data/skap.db`), usado quando você roda `npm run dev` na sua máquina — não afeta o site publicado.
 
 ## Esqueci minha senha (uso administrativo)
 
-Não há recuperação de senha por e-mail (a maioria dos colaboradores não tem e-mail cadastrado). Quem administra o servidor pode resetar a senha de um colaborador para a senha padrão:
+Não há recuperação de senha por e-mail (a maioria dos colaboradores não tem e-mail cadastrado). Quem administra pode resetar a senha de um colaborador para a senha padrão — local (`npm run reset-password`) ou direto em produção:
 
 ```bash
-npm run reset-password -- --matricula <matricula-do-colaborador>
+npm run reset-password:prod -- --matricula <matricula-do-colaborador>
 ```
 
 ## Notas importantes
