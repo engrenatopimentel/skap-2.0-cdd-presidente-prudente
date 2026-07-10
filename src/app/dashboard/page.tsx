@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getCurrentEmployee } from "@/lib/auth";
 import { getDashboardData } from "@/lib/dashboard";
 import { logoutAction } from "@/app/logout/actions";
@@ -61,12 +60,6 @@ export default async function DashboardPage() {
             Sua avaliação SKAP ainda não foi processada. Volte em breve.
           </div>
         )}
-
-        <p style={{ marginTop: 20, textAlign: "center" }}>
-          <Link href="/change-password" className="muted">
-            Trocar minha senha
-          </Link>
-        </p>
       </div>
     </div>
   );

@@ -25,9 +25,7 @@ async function hasValidSession(request: NextRequest): Promise<boolean> {
  * src/lib/auth.ts and the Next.js data-security guide on defense in depth.
  */
 export async function proxy(request: NextRequest) {
-  const isProtected =
-    request.nextUrl.pathname.startsWith("/dashboard") ||
-    request.nextUrl.pathname.startsWith("/change-password");
+  const isProtected = request.nextUrl.pathname.startsWith("/dashboard");
 
   if (isProtected && !(await hasValidSession(request))) {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -37,5 +35,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/change-password/:path*"],
+  matcher: ["/dashboard/:path*"],
 };
