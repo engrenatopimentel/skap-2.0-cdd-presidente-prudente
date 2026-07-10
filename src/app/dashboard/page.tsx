@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getCurrentEmployee } from "@/lib/auth";
 import { getDashboardData } from "@/lib/dashboard";
 import { logoutAction } from "@/app/logout/actions";
+import BrandLogo from "@/components/BrandLogo";
 import ProficiencyBadge from "@/components/ProficiencyBadge";
 import PillarScoreCard from "@/components/PillarScoreCard";
 import ActionPlanSection from "@/components/ActionPlanSection";
@@ -19,11 +20,14 @@ export default async function DashboardPage() {
   return (
     <div className="page-shell">
       <div className="top-bar">
-        <div>
-          <div className="brand-title" style={{ fontSize: 18 }}>
-            Portal SKAP
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <BrandLogo height={28} />
+          <div style={{ borderLeft: "1px solid var(--border)", paddingLeft: 12 }}>
+            <div className="brand-title" style={{ fontSize: 16, marginBottom: 0 }}>
+              Portal Skap 2.0 - CDD Presidente Prudente
+            </div>
+            <div className="muted">{employee.fullName}</div>
           </div>
-          <div className="muted">{employee.fullName}</div>
         </div>
         <form action={logoutAction}>
           <button className="btn btn-secondary" type="submit">

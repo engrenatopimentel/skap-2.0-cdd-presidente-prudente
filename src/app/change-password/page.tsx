@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentEmployee } from "@/lib/auth";
+import BrandLogo from "@/components/BrandLogo";
 import ChangePasswordForm from "./ChangePasswordForm";
 
 export default async function ChangePasswordPage() {
@@ -11,7 +12,10 @@ export default async function ChangePasswordPage() {
 
   return (
     <div className="page-shell">
-      <div className="card" style={{ marginTop: "10vh" }}>
+      <div className="card" style={{ marginTop: "8vh" }}>
+        <div className="brand-header">
+          <BrandLogo height={32} />
+        </div>
         <div className="brand-title">Trocar senha</div>
         <p className="subtitle">
           Opcional — você pode continuar usando sua senha atual se preferir.
