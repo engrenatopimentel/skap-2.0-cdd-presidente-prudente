@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentEmployee } from "@/lib/auth";
+import LoginForm from "./LoginForm";
 
-export default async function Home() {
+export default async function LoginPage() {
   const employee = await getCurrentEmployee();
   if (employee) {
     redirect("/dashboard");
@@ -10,14 +10,13 @@ export default async function Home() {
 
   return (
     <div className="page-shell">
-      <div className="card" style={{ marginTop: "10vh", textAlign: "center" }}>
+      <div className="card" style={{ marginTop: "10vh" }}>
         <div className="brand-title">Portal SKAP</div>
         <p className="subtitle">
-          Acompanhe sua avaliação de competências.
+          Acompanhe sua avaliação de competências. Entre com seu CPF ou
+          Matrícula.
         </p>
-        <Link href="/login" className="btn" style={{ display: "inline-flex" }}>
-          Entrar
-        </Link>
+        <LoginForm />
       </div>
     </div>
   );

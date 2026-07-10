@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Employee {
+  id                 Int       @id @default(autoincrement())
+  matricula          String    @unique
+  cpf                String    @unique
+  fullName           String
+  fullNameNormalized String
+  cargo              String?
+  tipoCargo          String?
+  empresa            String?
+  operacao           String?
+  lotacao            String?
+  liderancaNome      String?
+  status             String?
+
+  passwordHash     String
+  failedLoginCount Int       @default(0)
+  lockedUntil      DateTime?
+  lastLoginAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  evaluationResult  EvaluationResult?
+  actionPlanComment ActionPlanComment?
+
+  @@index([fullNameNormalized])
+}
+
+model EvaluationResult {
+  id         Int      @id @default(autoincrement())
+  employeeId Int      @unique
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  empresa     String?
+  operacao    String?
+  atividade   String?
+  cargo       String?
+  tempoDeCasa String?
+
+  tecnicaRatio       Float?
+  tecnicaNumerador   Int?
+  tecnicaDenominador Int?
+
+  especificaRatio       Float?
+  especificaNumerador   Int?
+  especificaDenominador Int?
+
+  empoderamentoRatio       Float?
+  empoderamentoNumerador   Int?
+  empoderamentoDenominador Int?
+
+  proficiencia Float?
+  nivel        String?
+
+  importedAt DateTime @default(now())
+}
+
+model ActionPlanComment {
+  id         Int      @id @default(autoincrement())
+  employeeId Int      @unique
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  tecnicaComment       String?
+  especificaComment    String?
+  empoderamentoComment String?
+
+  importedAt DateTime @default(now())
+}
+
+model BlockBenchmark {
+  id         Int      @id @default(autoincrement())
+  bloco      String
+  tecnica    Float?
+  especifica Float?
+  empoderamento Float?
+  importedAt DateTime @default(now())
+}
+
+model ImportRun {
+  id                   Int       @id @default(autoincrement())
+  startedAt            DateTime  @default(now())
+  finishedAt           DateTime?
+  employeesUpserted    Int       @default(0)
+  newPasswordsAssigned Int       @default(0)
+  unmatchedRowsJson    String?
+}

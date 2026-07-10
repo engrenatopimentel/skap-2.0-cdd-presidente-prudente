@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portal SKAP
 
-## Getting Started
+Portal onde o colaborador entra com CPF ou Matrícula + senha para acompanhar sua avaliação SKAP (Habilidades Técnicas, Específicas e Empoderamento).
 
-First, run the development server:
+## Como rodar pela primeira vez
+
+1. Instale o [Node.js](https://nodejs.org) (versão 18 ou mais recente).
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. O arquivo `.env` já vem com valores padrão para uso local. Antes de colocar em produção, troque `SESSION_SECRET` por uma string longa e aleatória (ex: gerada com `openssl rand -base64 32`).
+4. Crie o banco de dados local:
+   ```bash
+   npx prisma migrate dev
+   ```
+5. Rode o importador para carregar os colaboradores e as avaliações a partir das planilhas Excel (ele lê a pasta configurada em `IMPORT_SOURCE_DIR` no `.env`, que por padrão aponta para a pasta acima desta, onde ficam os exports do Power BI):
+   ```bash
+   npm run import
+   ```
+   Ao final, um relatório é impresso no terminal e salvo em `last-import-report.txt`, mostrando quantos colaboradores foram importados e listando qualquer linha de avaliação/comentário que não foi possível casar com um colaborador do Cadastro (normalmente erro de digitação no nome).
+6. Suba o servidor:
+   ```bash
+   npm run dev
+   ```
+   Acesse http://localhost:3000.
+
+## Login de teste
+
+A senha padrão de cada colaborador novo é o primeiro nome em minúsculo (sem acento) + `123`. Exemplo: "Marcio Jose..." → `marcio123`. O colaborador pode trocar a senha a qualquer momento em "Trocar minha senha" — a troca não é obrigatória.
+
+## Reimportar dados
+
+Sempre que o RH atualizar os exports do Power BI (mesmos nomes de arquivo, na mesma pasta), basta rodar `npm run import` de novo. A importação é segura de repetir: atualiza dados de perfil e notas, mas nunca mexe na senha de quem já tem conta.
+
+## Esqueci minha senha (uso administrativo)
+
+Não há recuperação de senha por e-mail (a maioria dos colaboradores não tem e-mail cadastrado). Quem administra o servidor pode resetar a senha de um colaborador para a senha padrão:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run reset-password -- --matricula <matricula-do-colaborador>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Notas importantes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- O banco (`data/skap.db`) contém CPFs e dados pessoais — nunca commitar no git (já está no `.gitignore`).
+- Em produção, o app deve rodar atrás de HTTPS (ex: nginx, Caddy ou Cloudflare Tunnel) — ele mesmo não termina TLS.
+- Os 3 arquivos "Radar de Competências" não são importados: são agregados por área (Bloco), não por colaborador, e 2 dos 3 exports vêm quebrados. Não é possível montar um radar individual com os dados disponíveis hoje.
